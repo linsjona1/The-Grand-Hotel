@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # The Grand Hotel - 5-Star Luxury React Application
 
 A modern, responsive, luxury 5-star hotel web application built with **React**, **Vite**, **TypeScript**, and **Tailwind CSS**.
