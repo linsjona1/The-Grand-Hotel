@@ -19,10 +19,15 @@ export default function HotelNavbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
     e.preventDefault();
@@ -36,7 +41,6 @@ export default function HotelNavbar() {
       }
     }
 
-    // If on another page, navigate to the route or home hash
     if (link.to.startsWith('/#')) {
       navigate('/');
       setTimeout(() => {
@@ -62,80 +66,100 @@ export default function HotelNavbar() {
   };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-[#faf8f5]/95 backdrop-blur-md shadow-sm' : 'bg-[#faf8f5]/80 backdrop-blur-sm'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="text-2xl font-serif font-bold tracking-wide text-[#8b6914]">
-              The Grand<span className="text-[#c4a35a]">.</span>
-            </span>
-          </Link>
+    <>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${
+          scrolled || isOpen
+            ? 'bg-[#faf8f5]/95 backdrop-blur-md shadow-sm border-b border-[#e8e0d5]/60'
+            : 'bg-[#faf8f5]/85 backdrop-blur-sm'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 group focus:outline-none">
+              <span className="text-xl sm:text-2xl font-serif font-bold tracking-wide text-[#8b6914]">
+                The Grand<span className="text-[#c4a35a]">.</span>
+              </span>
+            </Link>
 
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => handleClick(e, link)}
-                className="text-sm font-medium text-[#5c4d3c] hover:text-[#8b6914] transition-colors tracking-wide uppercase"
-              >
-                {link.name}
-              </a>
-            ))}
-            <button
-              onClick={handleBookNow}
-              className="px-6 py-2.5 bg-[#8b6914] text-white text-sm font-medium rounded-sm hover:bg-[#6b5110] transition-colors tracking-wide uppercase cursor-pointer"
-            >
-              Book Now
-            </button>
-          </div>
-
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-[#5c4d3c]"
-            aria-label="Toggle Navigation Menu"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#faf8f5]/98 backdrop-blur-md border-t border-[#e8e0d5] overflow-hidden"
-          >
-            <div className="px-4 py-6 space-y-1">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-7 lg:gap-8">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleClick(e, link)}
-                  className="block px-4 py-3 text-sm font-medium text-[#5c4d3c] hover:text-[#8b6914] transition-colors tracking-wide uppercase"
+                  className="text-xs lg:text-sm font-medium text-[#5c4d3c] hover:text-[#8b6914] transition-colors tracking-wider uppercase"
                 >
                   {link.name}
                 </a>
               ))}
               <button
                 onClick={handleBookNow}
-                className="block w-full text-center px-4 py-3 bg-[#8b6914] text-white text-sm font-medium rounded-sm hover:bg-[#6b5110] transition-colors tracking-wide uppercase mt-4 cursor-pointer"
+                className="px-5 lg:px-6 py-2.5 bg-[#8b6914] text-white text-xs lg:text-sm font-medium rounded-sm hover:bg-[#6b5110] transition-colors tracking-wider uppercase cursor-pointer shadow-sm hover:shadow"
               >
                 Book Now
               </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden w-10 h-10 flex items-center justify-center rounded-sm text-[#5c4d3c] hover:text-[#8b6914] hover:bg-[#8b6914]/10 transition-colors cursor-pointer"
+              aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isOpen}
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Drawer */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden bg-[#faf8f5] border-t border-[#e8e0d5] shadow-xl overflow-hidden"
+            >
+              <div className="max-w-md mx-auto px-6 py-6 flex flex-col items-center text-center space-y-2">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => handleClick(e, link)}
+                    className="w-full py-3 text-sm font-semibold text-[#5c4d3c] hover:text-[#8b6914] hover:bg-[#8b6914]/5 rounded-sm transition-all tracking-wider uppercase"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+                <div className="w-full pt-4 border-t border-[#e8e0d5]/80 mt-2">
+                  <button
+                    onClick={handleBookNow}
+                    className="w-full py-3.5 bg-[#8b6914] text-white text-sm font-semibold rounded-sm hover:bg-[#6b5110] transition-colors tracking-wider uppercase shadow-md cursor-pointer"
+                  >
+                    Reserve Your Stay
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.nav>
+
+      {/* Backdrop overlay for mobile menu */}
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 bg-black/30 backdrop-blur-xs z-40 md:hidden"
+        />
+      )}
+    </>
   );
 }

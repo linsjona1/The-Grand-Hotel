@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bed, Bath, Wifi, Tv, Wind, Coffee, ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { useBooking } from '../context/BookingContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -61,13 +61,17 @@ export default function RoomsPage() {
   };
 
   return (
-    <div className="pt-24 pb-20 bg-[#faf8f5]">
+    <div className="pt-16 sm:pt-20 pb-16 sm:pb-20 bg-[#faf8f5]">
       {/* Header Banner */}
-      <div className="bg-[#2c2416] text-white py-16 px-4 mb-16 text-center">
+      <div className="bg-[#2c2416] text-white py-12 sm:py-16 px-4 mb-10 sm:mb-14 text-center">
         <div className="max-w-4xl mx-auto">
-          <span className="text-[#c4a35a] uppercase tracking-widest text-xs font-semibold">Accommodations</span>
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold mt-3 mb-4">Rooms & Suites</h1>
-          <p className="text-white/70 max-w-xl mx-auto text-sm sm:text-base">
+          <span className="text-[#c4a35a] uppercase tracking-widest text-xs font-semibold block">
+            Accommodations
+          </span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold mt-2.5 mb-3 sm:mb-4">
+            Rooms & Suites
+          </h1>
+          <p className="text-white/80 max-w-xl mx-auto text-xs sm:text-base leading-relaxed">
             Each retreat is custom designed with refined textures, handcrafted furniture, and state-of-the-art luxuries.
           </p>
         </div>
@@ -75,14 +79,14 @@ export default function RoomsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Category Tabs */}
-        <div className="flex justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 sm:mb-12">
           {['All', 'Rooms', 'Suites'].map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-6 py-2.5 rounded-sm text-sm font-medium tracking-wider uppercase transition-colors cursor-pointer ${
+              className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-sm text-xs sm:text-sm font-semibold tracking-wider uppercase transition-colors cursor-pointer ${
                 activeCategory === cat
-                  ? 'bg-[#8b6914] text-white'
+                  ? 'bg-[#8b6914] text-white shadow-xs'
                   : 'bg-white text-[#5c4d3c] border border-[#e8e0d5] hover:border-[#8b6914]'
               }`}
             >
@@ -92,39 +96,39 @@ export default function RoomsPage() {
         </div>
 
         {/* Room Cards */}
-        <div className="space-y-12">
+        <div className="space-y-8 sm:space-y-12">
           {filtered.map((room, idx) => (
             <motion.div
               key={room.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white border border-[#e8e0d5] rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-shadow grid lg:grid-cols-12"
+              className="bg-white border border-[#e8e0d5] rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-shadow grid grid-cols-1 lg:grid-cols-12 max-w-xl lg:max-w-none mx-auto"
             >
-              <div className="lg:col-span-6 relative h-72 sm:h-96 lg:h-auto overflow-hidden">
+              <div className="lg:col-span-6 relative h-60 sm:h-80 lg:h-auto overflow-hidden">
                 <img
                   src={room.image}
                   alt={room.name}
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 text-xs font-semibold uppercase text-[#8b6914] tracking-wider rounded-sm">
+                <div className="absolute top-3.5 left-3.5 bg-white/95 backdrop-blur px-2.5 py-1 text-xs font-semibold uppercase text-[#8b6914] tracking-wider rounded-sm shadow-xs">
                   {room.category}
                 </div>
               </div>
 
-              <div className="lg:col-span-6 p-8 sm:p-10 flex flex-col justify-between">
+              <div className="lg:col-span-6 p-5 sm:p-8 lg:p-10 flex flex-col justify-between">
                 <div>
                   <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
-                    <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#2c2416]">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-[#2c2416]">
                       {room.name}
                     </h2>
                     <div className="text-right">
-                      <span className="text-2xl font-serif font-bold text-[#8b6914]">${room.price}</span>
+                      <span className="text-xl sm:text-2xl font-serif font-bold text-[#8b6914]">${room.price}</span>
                       <span className="text-[#8a7a6a] text-xs"> / night</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-y-2 gap-x-4 text-xs text-[#8a7a6a] mb-4">
+                  <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-[#8a7a6a] mb-4">
                     <span><strong>Size:</strong> {room.size}</span>
                     <span>•</span>
                     <span><strong>Capacity:</strong> {room.guests}</span>
@@ -132,11 +136,11 @@ export default function RoomsPage() {
                     <span><strong>Bed:</strong> {room.bed}</span>
                   </div>
 
-                  <p className="text-[#5c4d3c] text-sm leading-relaxed mb-6">
+                  <p className="text-[#5c4d3c] text-xs sm:text-sm leading-relaxed mb-6">
                     {room.description}
                   </p>
 
-                  <div className="grid grid-cols-2 gap-2 mb-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 mb-6 sm:mb-8">
                     {room.features.map((feat) => (
                       <div key={feat} className="flex items-center gap-2 text-xs text-[#5c4d3c]">
                         <Check className="w-4 h-4 text-[#8b6914] shrink-0" />
@@ -146,10 +150,10 @@ export default function RoomsPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-[#f0eae1]">
+                <div className="pt-4 border-t border-[#f0eae1]">
                   <button
                     onClick={() => handleBook(room.id)}
-                    className="flex-1 py-3.5 bg-[#8b6914] text-white font-medium rounded-sm hover:bg-[#6b5110] transition-colors tracking-wide uppercase text-sm flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-[#8b6914] text-white font-medium rounded-sm hover:bg-[#6b5110] transition-colors tracking-wider uppercase text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
                   >
                     Reserve {room.name}
                     <ArrowRight className="w-4 h-4" />

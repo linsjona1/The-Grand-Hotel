@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { Calendar, Users, CheckCircle, Mail, Phone, DollarSign, ShieldCheck } from 'lucide-react';
+import { CheckCircle, Mail, Phone } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 
 const roomNames: Record<string, string> = {
@@ -17,7 +17,7 @@ const roomPrices: Record<string, number> = {
 
 export default function HotelBooking() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: '-60px' });
   const { selectedRoom, setSelectedRoom, addBooking } = useBooking();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
@@ -84,12 +84,8 @@ export default function HotelBooking() {
       `${form.name}`
     );
 
-    // Record booking in context
     addBooking(form);
-
-    // Open email client with pre-filled booking details
     window.location.href = `mailto:linusjona7@gmail.com?subject=${subject}&body=${body}`;
-
     setSubmitted(true);
   };
 
@@ -108,25 +104,30 @@ export default function HotelBooking() {
   };
 
   return (
-    <section id="booking" className="py-24 sm:py-32 bg-[#faf8f5]">
+    <section id="booking" className="py-16 sm:py-24 lg:py-32 bg-[#faf8f5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          {/* Left Column: Context & Contact */}
           <motion.div
             ref={ref}
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
+            className="text-center lg:text-left max-w-xl mx-auto lg:mx-0 w-full"
           >
-            <span className="text-sm font-medium text-[#8b6914] tracking-widest uppercase">Reservations</span>
-            <h2 className="text-4xl sm:text-5xl font-serif font-bold text-[#2c2416] mt-4 mb-6">
+            <span className="text-xs sm:text-sm font-semibold text-[#8b6914] tracking-widest uppercase block">
+              Reservations
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#2c2416] mt-3 mb-4 sm:mb-6">
               Book Your <span className="text-[#8b6914]">Stay</span>
             </h2>
-            <p className="text-[#5c4d3c] leading-relaxed mb-8">
+            <p className="text-[#5c4d3c] text-sm sm:text-base leading-relaxed mb-6 sm:mb-8">
               Ready to experience luxury? Fill out the reservation details and our concierge will
               personally prepare your stay. Your email app will open with all details pre-filled.
             </p>
 
-            <div className="space-y-4 mb-8">
+            {/* Value Guarantees */}
+            <div className="space-y-3 sm:space-y-4 mb-8 text-left max-w-md mx-auto lg:mx-0">
               {[
                 'Best price guarantee direct with hotel',
                 'Free cancellation up to 24 hours prior to check-in',
@@ -135,55 +136,60 @@ export default function HotelBooking() {
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-[#8b6914] shrink-0" />
-                  <span className="text-[#5c4d3c] text-sm">{item}</span>
+                  <span className="text-[#5c4d3c] text-xs sm:text-sm font-medium">{item}</span>
                 </div>
               ))}
             </div>
 
-            <div className="p-6 bg-[#2c2416] text-white rounded-sm shadow-md">
+            {/* Direct Contact Box */}
+            <div className="p-5 sm:p-6 bg-[#2c2416] text-white rounded-sm shadow-md text-center sm:text-left">
               <div className="text-[#c4a35a] text-xs font-semibold tracking-widest uppercase mb-3">
                 Concierge & Direct Bookings
               </div>
-              <a
-                href="tel:+2347043935217"
-                className="flex items-center gap-3 text-white hover:text-[#c4a35a] transition-colors mb-3"
-              >
-                <Phone className="w-5 h-5 text-[#c4a35a]" />
-                <span className="text-lg font-serif">+234 704 393 5217</span>
-              </a>
-              <a
-                href="mailto:linusjona7@gmail.com"
-                className="flex items-center gap-3 text-white/70 hover:text-[#c4a35a] transition-colors text-sm"
-              >
-                <Mail className="w-5 h-5 text-[#c4a35a]" />
-                <span>linusjona7@gmail.com</span>
-              </a>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 justify-center sm:justify-start">
+                <a
+                  href="tel:+2347043935217"
+                  className="flex items-center justify-center sm:justify-start gap-2.5 text-white hover:text-[#c4a35a] transition-colors py-1"
+                >
+                  <Phone className="w-4 h-4 text-[#c4a35a]" />
+                  <span className="text-base sm:text-lg font-serif">+234 704 393 5217</span>
+                </a>
+                <a
+                  href="mailto:linusjona7@gmail.com"
+                  className="flex items-center justify-center sm:justify-start gap-2.5 text-white/80 hover:text-[#c4a35a] transition-colors text-xs sm:text-sm py-1 break-all"
+                >
+                  <Mail className="w-4 h-4 text-[#c4a35a] shrink-0" />
+                  <span>linusjona7@gmail.com</span>
+                </a>
+              </div>
             </div>
           </motion.div>
 
+          {/* Right Column: Reservation Form */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
+            className="w-full max-w-xl mx-auto lg:max-w-none"
           >
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white p-10 rounded-sm shadow-lg border border-[#e8e0d5] text-center"
+                className="bg-white p-6 sm:p-10 rounded-sm shadow-lg border border-[#e8e0d5] text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-[#8b6914]/10 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-[#8b6914]" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#8b6914]/10 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-[#8b6914]" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-[#2c2416] mb-2">Reservation Request Sent!</h3>
-                <p className="text-[#5c4d3c] mb-4">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#2c2416] mb-2">Reservation Request Sent!</h3>
+                <p className="text-[#5c4d3c] text-xs sm:text-sm mb-3">
                   Your booking request for the <strong className="text-[#8b6914]">{roomNames[form.room]}</strong> has been initiated.
                 </p>
-                <p className="text-[#8a7a6a] text-sm mb-6">
+                <p className="text-[#8a7a6a] text-xs sm:text-sm mb-6">
                   Check your mail client to verify that your message was sent to <strong className="text-[#5c4d3c]">linusjona7@gmail.com</strong>.
                 </p>
 
-                <div className="bg-[#faf8f5] p-4 rounded-sm text-left mb-6 text-sm text-[#5c4d3c] space-y-1">
+                <div className="bg-[#faf8f5] p-4 rounded-sm text-left mb-6 text-xs sm:text-sm text-[#5c4d3c] space-y-1.5 border border-[#e8e0d5]">
                   <div><strong>Guest:</strong> {form.name}</div>
                   <div><strong>Dates:</strong> {form.checkIn || 'TBD'} to {form.checkOut || 'TBD'} ({nights} {nights === 1 ? 'night' : 'nights'})</div>
                   <div><strong>Guests:</strong> {form.guests}</div>
@@ -193,14 +199,14 @@ export default function HotelBooking() {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <a
                     href="mailto:linusjona7@gmail.com"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#8b6914] text-white font-medium rounded-sm hover:bg-[#6b5110] transition-colors"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#8b6914] text-white font-medium rounded-sm hover:bg-[#6b5110] transition-colors text-xs sm:text-sm uppercase tracking-wider"
                   >
                     <Mail className="w-4 h-4" />
                     Open Email Again
                   </a>
                   <button
                     onClick={handleReset}
-                    className="px-6 py-3 border border-[#8b6914] text-[#8b6914] font-medium rounded-sm hover:bg-[#8b6914] hover:text-white transition-colors cursor-pointer"
+                    className="px-6 py-3 border border-[#8b6914] text-[#8b6914] font-medium rounded-sm hover:bg-[#8b6914] hover:text-white transition-colors cursor-pointer text-xs sm:text-sm uppercase tracking-wider"
                   >
                     New Reservation
                   </button>
@@ -209,11 +215,12 @@ export default function HotelBooking() {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="bg-white p-8 sm:p-10 rounded-sm shadow-lg border border-[#e8e0d5] space-y-6"
+                className="bg-white p-5 sm:p-8 md:p-10 rounded-sm shadow-lg border border-[#e8e0d5] space-y-4 sm:space-y-5"
               >
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                {/* Name & Email */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="w-full min-w-0">
+                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                       Full Name *
                     </label>
                     <input
@@ -222,11 +229,11 @@ export default function HotelBooking() {
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       placeholder="e.g. Jonathan Linus"
-                      className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors"
+                      className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                  <div className="w-full min-w-0">
+                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                       Email Address *
                     </label>
                     <input
@@ -234,15 +241,16 @@ export default function HotelBooking() {
                       required
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      placeholder="e.g. name@example.com"
-                      className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors"
+                      placeholder="name@example.com"
+                      className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                {/* Phone & Room */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="w-full min-w-0">
+                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                       Phone Number
                     </label>
                     <input
@@ -250,11 +258,11 @@ export default function HotelBooking() {
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       placeholder="+234 ..."
-                      className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors"
+                      className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                  <div className="w-full min-w-0">
+                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                       Room Type *
                     </label>
                     <select
@@ -263,7 +271,7 @@ export default function HotelBooking() {
                         setForm({ ...form, room: e.target.value });
                         setSelectedRoom(e.target.value);
                       }}
-                      className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
+                      className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
                     >
                       <option value="deluxe">Deluxe Room ($250/night)</option>
                       <option value="ocean">Ocean Suite ($450/night)</option>
@@ -272,9 +280,10 @@ export default function HotelBooking() {
                   </div>
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                {/* Dates & Guests */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="w-full min-w-0">
+                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                       Check-In *
                     </label>
                     <input
@@ -282,11 +291,11 @@ export default function HotelBooking() {
                       required
                       value={form.checkIn}
                       onChange={(e) => setForm({ ...form, checkIn: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
+                      className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                  <div className="w-full min-w-0">
+                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                       Check-Out *
                     </label>
                     <input
@@ -294,17 +303,17 @@ export default function HotelBooking() {
                       required
                       value={form.checkOut}
                       onChange={(e) => setForm({ ...form, checkOut: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
+                      className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                  <div className="w-full min-w-0">
+                    <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                       Guests *
                     </label>
                     <select
                       value={form.guests}
                       onChange={(e) => setForm({ ...form, guests: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
+                      className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors cursor-pointer"
                     >
                       <option value="1">1 Guest</option>
                       <option value="2">2 Guests</option>
@@ -314,8 +323,9 @@ export default function HotelBooking() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-2">
+                {/* Notes */}
+                <div className="w-full min-w-0">
+                  <label className="block text-xs font-semibold text-[#5c4d3c] tracking-wider uppercase mb-1.5">
                     Special Requests & Preferences
                   </label>
                   <textarea
@@ -323,19 +333,20 @@ export default function HotelBooking() {
                     value={form.notes}
                     onChange={(e) => setForm({ ...form, notes: e.target.value })}
                     placeholder="Dietary requirements, high floor, early arrival..."
-                    className="w-full px-4 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors resize-none"
+                    className="w-full min-w-0 px-3.5 py-3 bg-[#faf8f5] border border-[#e8e0d5] rounded-sm focus:outline-none focus:border-[#8b6914] text-sm transition-colors resize-none"
                   />
                 </div>
 
                 {/* Estimate Summary */}
-                <div className="bg-[#f5f0e8] p-4 rounded-sm flex items-center justify-between text-sm">
-                  <span className="text-[#5c4d3c]">Estimated Total ({nights} {nights === 1 ? 'night' : 'nights'}):</span>
-                  <span className="text-xl font-serif font-bold text-[#8b6914]">${total}</span>
+                <div className="bg-[#f5f0e8] p-3.5 sm:p-4 rounded-sm flex items-center justify-between text-xs sm:text-sm">
+                  <span className="text-[#5c4d3c] font-medium">Estimated Stay ({nights} {nights === 1 ? 'night' : 'nights'}):</span>
+                  <span className="text-lg sm:text-xl font-serif font-bold text-[#8b6914]">${total}</span>
                 </div>
 
+                {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full py-4 bg-[#8b6914] text-white font-medium rounded-sm hover:bg-[#6b5110] transition-colors tracking-wide uppercase text-sm shadow-md hover:shadow-lg cursor-pointer"
+                  className="w-full py-3.5 sm:py-4 bg-[#8b6914] text-white font-semibold rounded-sm hover:bg-[#6b5110] transition-colors tracking-wider uppercase text-xs sm:text-sm shadow-md hover:shadow-lg cursor-pointer"
                 >
                   Submit Reservation Request
                 </button>
